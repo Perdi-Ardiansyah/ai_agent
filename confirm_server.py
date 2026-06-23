@@ -11,6 +11,8 @@ from flask import Flask, request, render_template_string
 from db import (get_order_by_token, confirm_order_by_token,
                 reject_order_by_token, update_stock, get_stock, log_activity)
 from notifier import send_confirmation_notification
+from main import run_simulation_step
+
 
 app = Flask(__name__)
 
@@ -207,6 +209,13 @@ def run_confirm_server():
     print("🌐 Confirm Server berjalan di http://localhost:5050")
     app.run(host="0.0.0.0", port=5050, debug=False, use_reloader=False)
 
+@app.route("/simulate")
+def simulate():
+    logs = run_simulation_step()
+    return {
+        "success": True,
+        "logs": logs
+    }
 
 if __name__ == "__main__":
     run_confirm_server()
